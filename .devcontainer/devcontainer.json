@@ -1,0 +1,18 @@
+{
+	"image": "mcr.microsoft.com/devcontainers/universal:2",
+	"features": {
+		"ghcr.io/eitsupi/devcontainer-features/julia:0": {
+			"version": "latest"
+		},
+		"ghcr.io/rocker-org/devcontainer-features/r-apt:0": {
+			"installDevTools": true,
+			"installREnv": true,
+			"installRMarkdown": true,
+			"installJupyterlab": true,
+			"installRadian": true,
+			"installVscDebugger": true,
+			"useTesting": true,
+			"vscodeRSupport": "full"
+		}
+	}
+}
