@@ -13,6 +13,9 @@
 			"installVscDebugger": true,
 			"useTesting": true,
 			"vscodeRSupport": "full"
+		},
+		"ghcr.io/rocker-org/devcontainer-features/pandoc:1": {
+			"version": "latest"
 		}
 	}
 }

@@ -2,3 +2,82 @@
 title: "intro R"
 output: github_document
 ---
+
+# R环境配置
+## R版本管理renv
+1. renv::init() 初始化一个项目环境
+2. 我一般在一个workspace下面初始化一个R公用环境，然后每个具体的目录下，用.Rprofile文件里的激活这个公用环境，里面需要设置激活环境路径，VSCode的r插件就能自动激活。
+3. install.packages("rmarkdown") 安装必要的库: rmarkdown ggplot2 tibble dplyr tidyverse
+
+``` {r, results='hide', message=FALSE}
+library(tibble)
+library(tidyverse)
+library(ggplot2)
+set.seed(101)
+```
+
+# 计算中位数
+```{r,collapse=TRUE}
+sample.mode <- function(x) {
+    tf <- table(x)
+    maxf <- max(tf)
+    strmode <- names(tf)[tf == maxf]
+    if (length(strmode) < length(x)) {
+        sort(as.numeric(strmode))
+    } else {
+        numeric(0)
+    }
+}
+
+x <- round(rnorm(100, 10, 2), 2)
+mean(x)
+median(x)
+sample.mode(x)
+```
+
+# 直方图ggplot2
+```{r}
+x <- rnorm(100)
+d <- tibble(x=x)
+ggplot(data=d, mapping = aes(x = x)) + geom_histogram(bin=12)
+```
+
+# 核密度估计
+```{r}
+x <- rcauchy(100)
+d <- tibble(x)
+ggplot(data = d, mapping = aes(x = x, y=..density..)) +
+    geom_histogram(breaks=c(-100, -50, -30, -10, -5, -2, -1, 0, 1, 2, 5, 10, 30, 100)) +
+    geom_density(color="red", size=1)
+```
+
+# 盒形图
+``` {r}
+x <- exp(rnorm(100))
+d <- tibble(x = x)
+d1 <- tibble(x = seq(0, max(x), length = 200)) %>%
+    mutate(y = dlnorm(x), mean(log(x)), sd(log(x)))
+ggplot(data = d, mapping = aes(x = x, y = ..density..)) +
+    geom_histogram(bins = 20) +
+    geom_line(data = d1, mapping = aes(x = x, y = y), col = "red", size = 1)
+```
+
+%>% 叫做管道算子，他可以连接函数的输入输出。函数就像污水处理站，通过管道算子，数据可以像水一样优雅的在这些处理站之间流动。
+
+mutate函数可以对数据增加新的列，它来自dplyr包，该包把数据处理抽象为几个主要步骤：
+
+* select 、选择列
+* filter、 过滤
+* group_by、分组汇总
+* summarise、汇总数据
+* arrange、排序数据
+* mutate、根据已有数据创建新列
+
+对于单峰分布，盒形图可以有效的反应数据分布情况，其中那根粗线条是中位数，盒子的上下边缘分别位于1/4分位数和3/4分位数处。
+```{r}
+# 盒形图
+ggplot(data = d, mapping = aes(x = 1, y = x)) +
+    geom_boxplot() +
+    scale_x_continuous(breaks = NULL) +
+    labs(x=NULL, y=NULL)
+```
